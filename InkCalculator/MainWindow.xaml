@@ -5,8 +5,56 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InkCalculator"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="InkCalculator" 
+        Height="450" Width="500"
+        Background="LightSlateGray">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBox Grid.Row="0" Name="ResultsArea"
+                 BorderBrush="Gray" TextAlignment="Right"
+                 FontSize="42" Margin="1" BorderThickness="2"
+                 IsEnabled="False"
+                 Height="120">0</TextBox>
+
+        <Grid Grid.Row="1" Name="PausedModeCtrl">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Margin="1"
+                    Click="Clean_Click">Limpiar</Button>
+            <Button Grid.Column="1" Margin="1"
+                    Click="DeleteLast_Click">Borrar último</Button>
+        </Grid>
+
+        <Button Grid.Row="1" Name="FluidModeCtrl"
+                Margin="1" Visibility="Collapsed"
+                Click="Clean_Click">Limpiar</Button>
+
+        <InkCanvas Grid.Row="2" Name="ExpressionsArea"
+                   Margin="3"/>
+
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Name="PausedModeBtn"
+                    IsEnabled="False"
+                    Click="PausedMode_Click">Modo pausado</Button>
+
+            <Button Grid.Column="1" Name="FluidModeBtn"
+                    Click="FluidMode_Click">Modo fluído</Button>
+
+        </Grid>
+
     </Grid>
 </Window>
