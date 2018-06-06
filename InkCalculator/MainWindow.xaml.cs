@@ -43,14 +43,15 @@ namespace InkCalculator
                     PausedModeCtrl.Visibility = Visibility.Collapsed;
                     FluidModeCtrl.Visibility = Visibility.Visible;
                 }
-                expressionRecognizer.RecognitionMode = _inputMode;
                 expressionRecognizer.Clear();
+                expressionRecognizer.RecognitionMode = _inputMode;
             }
         }
 
         private ExpressionRecognizer.Mode _inputMode;
 
         private ExpressionRecognizer expressionRecognizer;
+        private ExpressionEvaluator expressionEvaluator;
 
         public MainWindow()
         {
@@ -61,13 +62,16 @@ namespace InkCalculator
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             expressionRecognizer = new ExpressionRecognizer(ExpressionsArea, recognitionDelay);
-            expressionRecognizer.ExpressionRecognized += ExpressionRecognizer_ExpressionRecognized;
+            expressionEvaluator = new ExpressionEvaluator();
+
+            expressionEvaluator.ExpressionEvaluated += ExpressionEvaluator_ExpressionEvaluated;
+            expressionRecognizer.ExpressionRecognized += expressionEvaluator.EvaluateExpression;
             InputMode = defaultInputMode;
         }
 
-        private void ExpressionRecognizer_ExpressionRecognized(string recognizedExpression)
+        private void ExpressionEvaluator_ExpressionEvaluated(string evaluatedExpression)
         {
-            ResultsArea.Text = recognizedExpression;
+            ResultsArea.Text = evaluatedExpression;
         }
 
         private void Clean_Click(object sender, RoutedEventArgs e)

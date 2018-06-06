@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:InkCalculator"
         mc:Ignorable="d"
         Title="InkCalculator" 
-        Height="450" Width="500"
+        Height="450" Width="600"
         Background="LightSlateGray">
     <Grid Margin="5">
         <Grid.RowDefinitions>

@@ -21,7 +21,10 @@ namespace InkCalculator
             { "*", "*" },
             { "x", "*" },
             { "X", "*" },
-            { ".", "." }
+            { "•", "*" },
+            { ".", "." },
+            { "(", "(" },
+            { ")", ")" }
         };
 
         public string RecognizedExpression
@@ -101,6 +104,7 @@ namespace InkCalculator
 
         private void ProcessRecognizedInput(string input)
         {
+            if (input == "") return;
             switch (RecognitionMode)
             {
                 case Mode.PAUSED:
@@ -130,7 +134,6 @@ namespace InkCalculator
 
         private void RecognizeInFluidMode(string input)
         {
-            if (input == "") return;
             string sanitizedInput = input.Replace("Other", "F");
             string[] inputParts = sanitizedInput.ToCharArray().Select(c => c.ToString()).ToArray();
 
@@ -161,7 +164,15 @@ namespace InkCalculator
 
         private void RemoveLastPausedResultsEntry()
         {
-            pausedRecognitionResults.RemoveAt(pausedRecognitionResults.Count - 1);
+            if (pausedRecognitionResults.Count == 0) return;
+            int lastItem = pausedRecognitionResults.Count - 1;
+            if (lastItem == 0)
+            {
+                Clear();
+                return;
+            }
+
+            pausedRecognitionResults.RemoveAt(lastItem);
             SyncPausedResults();
         }
 
