@@ -20,12 +20,15 @@ namespace InkCalculator
     /// </summary>
     public partial class MainWindow : Window
     {
-        public Mode InputMode
+        private readonly ExpressionRecognizer.Mode defaultInputMode = ExpressionRecognizer.Mode.PAUSED;
+        private readonly int recognitionDelay = 500;
+
+        private ExpressionRecognizer.Mode InputMode
         {
             get => _inputMode;
-            private set {
+            set {
                 _inputMode = value;
-                if (_inputMode == Mode.PAUSED)
+                if (_inputMode == ExpressionRecognizer.Mode.PAUSED)
                 {
                     PausedModeBtn.IsEnabled = false;
                     FluidModeBtn.IsEnabled = true;
@@ -40,35 +43,51 @@ namespace InkCalculator
                     PausedModeCtrl.Visibility = Visibility.Collapsed;
                     FluidModeCtrl.Visibility = Visibility.Visible;
                 }
+                expressionRecognizer.RecognitionMode = _inputMode;
+                expressionRecognizer.Clear();
             }
         }
 
-        private Mode _inputMode;
+        private ExpressionRecognizer.Mode _inputMode;
+
+        private ExpressionRecognizer expressionRecognizer;
 
         public MainWindow()
         {
             InitializeComponent();
+            Loaded += MainWindow_Loaded;
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            expressionRecognizer = new ExpressionRecognizer(ExpressionsArea, recognitionDelay);
+            expressionRecognizer.ExpressionRecognized += ExpressionRecognizer_ExpressionRecognized;
+            InputMode = defaultInputMode;
+        }
+
+        private void ExpressionRecognizer_ExpressionRecognized(string recognizedExpression)
+        {
+            ResultsArea.Text = recognizedExpression;
         }
 
         private void Clean_Click(object sender, RoutedEventArgs e)
         {
-            ClearResultsArea();
-            ClearExpressionsArea();
+            expressionRecognizer.Clear();
         }
 
         private void DeleteLast_Click(object sender, RoutedEventArgs e)
         {
-
+            expressionRecognizer.RemoveLastInput();
         }
 
         private void PausedMode_Click(object sender, RoutedEventArgs e)
         {
-            InputMode = Mode.PAUSED;
+            InputMode = ExpressionRecognizer.Mode.PAUSED;
         }
 
         private void FluidMode_Click(object sender, RoutedEventArgs e)
         {
-            InputMode = Mode.FLUID;
+            InputMode = ExpressionRecognizer.Mode.FLUID;
         }
 
         private void ClearResultsArea()
@@ -79,11 +98,6 @@ namespace InkCalculator
         private void ClearExpressionsArea()
         {
             ExpressionsArea.Strokes.Clear();
-        }
-
-        public enum Mode
-        {
-            PAUSED, FLUID
         }
     }
 }
